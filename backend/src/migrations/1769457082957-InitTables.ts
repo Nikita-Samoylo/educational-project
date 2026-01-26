@@ -7,11 +7,13 @@ export class InitTables1727000000000 implements MigrationInterface {
     await queryRunner.query(`
         CREATE TABLE "users" (
             "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
+            "email" varchar(100) NOT NULL,
+            "password" varchar(255) NOT NULL,
             "name" character varying(100) NOT NULL,
             "position" character varying(100) NOT NULL,
+            CONSTRAINT "UQ_users_email" UNIQUE ("email"),
             CONSTRAINT "PK_users" PRIMARY KEY ("id")
         );
-
         CREATE TABLE "products" (
             "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
             "name" character varying(100) NOT NULL,
