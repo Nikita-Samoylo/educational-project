@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { AppDataSource } from './data-source';
 import { AuthModule } from './auth/auth.module';
 import { StoresModule } from './stores/stores.module'; 
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { StoresModule } from './stores/stores.module';
     TypeOrmModule.forRoot(AppDataSource.options),
     AuthModule,
     StoresModule, 
+    FilesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
