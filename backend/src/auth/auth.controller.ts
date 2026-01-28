@@ -30,6 +30,6 @@ export class AuthController {
   @Post('logout')
   logout(@Res({ passthrough: true }) res: express.Response) {
     res.clearCookie('access_token'); 
-    return { message: 'Вышли из системы' };
+    return { message: 'Logged out successfully' };
   }
 }
