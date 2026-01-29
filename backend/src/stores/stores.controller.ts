@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller,Get, Post, UseGuards } from '@nestjs/common';
 import { StoresService } from './stores.service';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { JwtAuthGuard } from '../config/jwt-auth.guard';
@@ -11,5 +11,11 @@ export class StoresController {
   @UseGuards(JwtAuthGuard) 
   create(@Body() dto: CreateStoreDto) {
     return this.storesService.create(dto);
+  }
+  
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  findAll() {
+    return this.storesService.findAll();
   }
 }

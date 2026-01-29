@@ -15,4 +15,8 @@ export class StoresService {
     const store = this.storeRepository.create(dto);
     return await this.storeRepository.save(store);
   }
+
+  async findAll() {
+    return await this.storeRepository.find();
+  }
 }
