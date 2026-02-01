@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { instance } from '../api/axios';
 import { useNavigate } from 'react-router-dom';
+import { StoreService } from '../services/store.service';
+import { AuthService } from '../services/auth.service'; 
 
 export const StoresPage = () => {
   const navigate = useNavigate();
@@ -19,9 +20,9 @@ export const StoresPage = () => {
     setLoading(true);
 
     try {
-      await instance.post('/stores', { name, location });
-      alert('Магазин успешно создан и выбран!');
-
+      await StoreService.create({ name, location });
+      
+      alert('Магазин успешно создан!');
       setName('');
       setLocation('');
       
@@ -35,17 +36,16 @@ export const StoresPage = () => {
 
   const handleLogout = async () => {
     try {
-      await instance.post('/auth/logout');
+      await AuthService.logout();
     } catch (e) {
-
     } finally {
       navigate('/auth');
     }
   };
 
   return (
-    <div className="auth-page">
-      <div className="auth-card">
+    <div className="stores-page">
+      <div className="store-card">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
           <h2>Создать магазин</h2>
           <button

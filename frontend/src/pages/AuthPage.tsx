@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { instance } from '../api/axios';
 import { useNavigate } from 'react-router-dom';
-
+import { AuthService } from '../services/auth.service'; 
 export const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate();
@@ -19,11 +18,12 @@ export const AuthPage = () => {
 
     try {
       if (isLogin) {
-        await instance.post('/auth/login', { email, password });
+        await AuthService.login({ email, password });
+        
         alert('Вход выполнен!');
         navigate('/');
       } else {
-        await instance.post('/auth/register', {
+        await AuthService.register({
           email,
           password,
           name,

@@ -7,6 +7,7 @@ import { AppDataSource } from './data-source';
 import { AuthModule } from './auth/auth.module';
 import { StoresModule } from './stores/stores.module'; 
 import { FilesModule } from './files/files.module';
+import { MinioModule } from './minio/minio.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { FilesModule } from './files/files.module';
     AuthModule,
     StoresModule, 
     FilesModule,
+    MinioModule, 
   ],
   controllers: [AppController],
   providers: [AppService],
