@@ -17,6 +17,17 @@ export class StoresService {
   }
 
   async findAll() {
-    return await this.storeRepository.find();
+    const stores = await this.storeRepository.find();
+    return stores
+      .filter((store) => store.name.length > 3)
+
+      .map((store) => ({
+        id: store.id,
+        title: store.name.toUpperCase(), 
+        address: `г. ${store.location}`, 
+        createdAt: new Date(),
+      }))
+
+      .sort((a, b) => a.title.localeCompare(b.title));
   }
 }

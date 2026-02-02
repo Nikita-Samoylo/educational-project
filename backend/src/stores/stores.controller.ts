@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Get, Res, UseGuards } from '@nestjs/common';
 import { StoresService } from './stores.service';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'; 
@@ -23,6 +23,12 @@ export class StoresController {
       maxAge: 30 * 24 * 60 * 60 * 1000, 
     });
 
-    return {message: 'Store created'};
+    return { message: 'Store created' };
+  }
+
+  @Get('all')
+  @UseGuards(JwtAuthGuard)
+  async getAll() {
+    return this.storesService.findAll();
   }
 }
