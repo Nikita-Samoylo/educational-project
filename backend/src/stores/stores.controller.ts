@@ -21,7 +21,6 @@ export class StoresController {
     @Req() req: RequestWithUser,
   ) {
     const store = await this.storesService.create(dto, req.user.userId);
-    // res.cookie logic убрали или оставили по желанию, здесь возвращаем объект
     return store;
   }
 

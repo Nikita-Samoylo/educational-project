@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, ILike, Raw, And } from 'typeorm';
 import { Store } from '../entities/store.entity'; 
 import { CreateStoreDto } from './dto/create-store.dto';
 
@@ -20,25 +20,27 @@ export class StoresService {
   }
 
   async findAll(userId: string, searchTerm?: string) {
+    const lengthCondition = Raw((alias) => `LENGTH(${alias}) > 3`);
+
+    const nameCondition = searchTerm 
+      ? And(lengthCondition, ILike(`%${searchTerm}%`))
+      : lengthCondition; 
+
     const stores = await this.storeRepository.find({
-      where: { userId: userId }
+      where: {
+        userId: userId, 
+        name: nameCondition, 
+      },
+      order: {
+        name: 'ASC', 
+      },
     });
 
-    return stores
-      .filter((store) => {
-        const isValidLength = store.name.length > 3;
-        const matchesSearch = searchTerm 
-          ? store.name.toLowerCase().includes(searchTerm.toLowerCase())
-          : true;
-
-        return isValidLength && matchesSearch;
-      })
-      .map((store) => ({
-        id: store.id,
-        title: store.name.toUpperCase(), 
-        address: `г. ${store.location}`, 
-        createdAt: new Date(),
-      }))
-      .sort((a, b) => a.title.localeCompare(b.title));
+    return stores.map((store) => ({
+      id: store.id,
+      title: store.name.toUpperCase(), 
+      address: `г. ${store.location}`, 
+      createdAt: new Date(),
+    }));
   }
 }
