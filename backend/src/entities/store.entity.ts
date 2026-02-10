@@ -10,4 +10,7 @@ export class Store {
 
   @Column({ type: 'varchar', length: 200 })
   location: string;
+
+  @Column({ type: 'uuid' }) 
+  userId: string;
 }

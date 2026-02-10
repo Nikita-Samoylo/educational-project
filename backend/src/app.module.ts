@@ -5,6 +5,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AppDataSource } from './data-source';
 import { AuthModule } from './auth/auth.module';
+import { StoresModule } from './stores/stores.module'; 
+import { FilesModule } from './files/files.module';
+import { MinioModule } from './minio/minio.module';
 
 @Module({
   imports: [
@@ -13,6 +16,9 @@ import { AuthModule } from './auth/auth.module';
     }),
     TypeOrmModule.forRoot(AppDataSource.options),
     AuthModule,
+    StoresModule, 
+    FilesModule,
+    MinioModule, 
   ],
   controllers: [AppController],
   providers: [AppService],
