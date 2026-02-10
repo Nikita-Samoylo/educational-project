@@ -26,6 +26,7 @@ export class InitTables1727000000000 implements MigrationInterface {
             "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
             "name" character varying(100) NOT NULL,
             "location" character varying(200) NOT NULL,
+            "userId" uuid NOT NULL,
             CONSTRAINT "PK_stores" PRIMARY KEY ("id")
         );
     `);

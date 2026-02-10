@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
 import { StoreService } from '../services/store.service';
-import { AuthService } from '../services/auth.service'; 
+import { AuthService } from '../services/auth.service';
+import type { ApiErrorResponse } from '../types/api.types'; 
 
 export const StoresPage = () => {
   const navigate = useNavigate();
@@ -26,9 +28,17 @@ export const StoresPage = () => {
       setName('');
       setLocation('');
       
-    } catch (err: any) {
-      const message = err.response?.data?.message || 'Не удалось создать магазин';
-      setError(Array.isArray(message) ? message.join(', ') : message);
+    } catch (err) {
+      console.error(err);
+
+      if (err instanceof AxiosError) {
+        const data = err.response?.data as ApiErrorResponse | undefined;
+        
+        const message = data?.message || 'Не удалось создать магазин';
+        setError(Array.isArray(message) ? message.join(', ') : message);
+      } else {
+        setError('Произошла непредвиденная ошибка');
+      }
     } finally {
       setLoading(false);
     }
@@ -38,6 +48,7 @@ export const StoresPage = () => {
     try {
       await AuthService.logout();
     } catch (e) {
+
     } finally {
       navigate('/auth');
     }

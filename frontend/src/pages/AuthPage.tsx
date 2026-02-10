@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthService } from '../services/auth.service'; 
+import { AxiosError } from 'axios';
+import { AuthService } from '../services/auth.service';
+import type { ApiErrorResponse } from '../types/api.types'; 
+
 export const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate();
@@ -33,10 +36,17 @@ export const AuthPage = () => {
         alert('Регистрация успешна! Теперь войдите.');
         setIsLogin(true);
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
-      const message = err.response?.data?.message || 'Произошла ошибка';
-      setError(Array.isArray(message) ? message.join(', ') : message);
+
+      if (err instanceof AxiosError) {
+        const data = err.response?.data as ApiErrorResponse | undefined;
+        
+        const message = data?.message || 'Произошла ошибка';
+        setError(Array.isArray(message) ? message.join(', ') : message);
+      } else {
+        setError('Неизвестная ошибка приложения');
+      }
     }
   };
 

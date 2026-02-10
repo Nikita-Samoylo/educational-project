@@ -1,8 +1,14 @@
-import { Body, Controller, Post, Get, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Get, UseGuards, Req, Query } from '@nestjs/common';
 import { StoresService } from './stores.service';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'; 
-import type { Response } from 'express';
+import { storeCookieOptions } from '../config/cookies.config';
+import { Request } from 'express';
+import { UserFromJwt } from '../config/jwt.strategy'; 
+
+interface RequestWithUser extends Request {
+  user: UserFromJwt;
+}
 
 @Controller('stores')
 export class StoresController {
@@ -12,23 +18,18 @@ export class StoresController {
   @UseGuards(JwtAuthGuard)
   async create(
     @Body() dto: CreateStoreDto,
-    @Res({ passthrough: true }) res: Response,
+    @Req() req: RequestWithUser,
   ) {
-    const store = await this.storesService.create(dto);
-
-    res.cookie('current_store', store.id, {
-      httpOnly: true,
-      secure: false, 
-      sameSite: 'lax',
-      maxAge: 30 * 24 * 60 * 60 * 1000, 
-    });
-
-    return { message: 'Store created' };
+    const store = await this.storesService.create(dto, req.user.userId);
+    return store;
   }
 
   @Get('all')
   @UseGuards(JwtAuthGuard)
-  async getAll() {
-    return this.storesService.findAll();
+  async getAll(
+    @Req() req: RequestWithUser,
+    @Query('search') search?: string
+  ) {
+    return this.storesService.findAll(req.user.userId, search);
   }
 }
