@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   postgres:
     image: postgres:16-alpine
@@ -8,9 +10,10 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 12345
     ports:
-      - "5433:5432"   
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
   minio:
     image: minio/minio
     container_name: edu-minio
@@ -20,10 +23,18 @@ services:
       MINIO_ROOT_USER: minio_user
       MINIO_ROOT_PASSWORD: minio_password
     ports:
-      - "9000:9000" 
-      - "9001:9001" 
+      - "9000:9000"
+      - "9001:9001"
     volumes:
       - minio_data:/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: edu-redis
+    restart: always
+    ports:
+      - "6379:6379"
+
 volumes:
   postgres_data:
   minio_data:
